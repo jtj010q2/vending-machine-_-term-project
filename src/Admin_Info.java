@@ -32,18 +32,28 @@ public class Admin_Info {
     		return false;
     	}
     	
-    	int num_count = 0; 		
-    	int char_count = 0;		
-    	int special_count = 0;	//셋중 하나라도 0일때 false
+        boolean hasDigit = false;
+        boolean hasSpecial = false;
     	
     	for (int i = 0 ; i < pw.length(); i++) {
+    		char c = pw.charAt(i);
     		
-    	}
-    	if() {
+    		if (c >= '0' && c<='9') {
+    			hasDigit = true;
+    		}
     		
+    		if ((c >= 33 && c <= 47) ||
+    				(c >= 58 && c <= 64) ||
+    			    (c >= 91 && c <= 96) ||
+    			    (c >= 123 && c <= 126)) {
+    			hasSpecial = true;
+    		}
     	}
     	
-    	return true;
+    	if (!hasDigit)   System.out.println("숫자를 포함해야 합니다.");
+        if (!hasSpecial) System.out.println("특수문자를 포함해야 합니다.");
+    	
+        return hasDigit && hasSpecial;
     }
 
     boolean login(String pw) {
