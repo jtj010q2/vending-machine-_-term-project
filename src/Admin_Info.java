@@ -32,21 +32,34 @@ public class Admin_Info {
     		return false;
     	}
     	
-    	int num_count = 0; 		
-    	int char_count = 0;		
-    	int special_count = 0;	//셋중 하나라도 0일때 false
+    	boolean hasDigit = false;
+    	boolean hasSpecial = false;
     	
     	for (int i = 0 ; i < pw.length(); i++) {
+    		char c = pw.charAt(i);
     		
+    		if (c>='0'&&c<='9') {
+    			hasDigit=true;
+    		}
+    		if ((c >= 33 && c <= 47) ||
+    		    (c >= 58 && c <= 64) ||
+    		    (c >= 91 && c <= 96) ||
+    		    (c >= 123 && c <= 126)) {
+    		    hasSpecial = true;
+    		}
     	}
-    	if() {
-    		
-    	}
-    	
-    	return true;
+    	if (!hasDigit)   System.out.println("숫자를 포함해야 합니다.");
+    if (!hasSpecial) System.out.println("특수문자를 포함해야 합니다.");
+
+    return hasDigit && hasSpecial;
     }
 
     boolean login(String pw) {
+    		if (this.hashedPassword == null) {
+    			System.out.println("등록된 아이디가 없습니다.");
+    			return false;
+    			
+    		}
         return BCrypt.checkpw(pw, this.hashedPassword);
     }
 
@@ -67,5 +80,22 @@ public class Admin_Info {
             e.printStackTrace();
             return null;
         }
+    }
+    
+    public boolean changepassword(String oldpw, String newpw) {
+    		if(!login(oldpw)) {
+    			System.out.println("비밀번호가 일치하지 않습니다.");
+    			return false;
+    		}
+    		
+    		if (!validatePassword(newpw)) {
+    	        return false;
+    	    }
+    		
+    		this.hashedPassword = BCrypt.hashpw(newpw, BCrypt.gensalt());
+    		savePassword(this.hashedPassword);
+    		System.out.println("비밀번호가 변경되었습니다.");
+    		return true;
+    	
     }
 }
